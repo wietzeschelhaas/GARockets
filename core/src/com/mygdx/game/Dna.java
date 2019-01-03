@@ -22,12 +22,12 @@ public class Dna {
     // target is hardcoded.
     Vector2 target = new Vector2(1500,800);
 
-    float scalar = 4;
+    float scalar = 10;
 
     public Dna() {
 
         pos = new Vector2(100,100);
-        genes = new Vector2[1000];
+        genes = new Vector2[10000];
         this.rocket = new Sprite(new Texture("rocket.png"));
         this.rocket.setSize(this.rocket.getWidth()*0.3f,this.rocket.getHeight()*0.3f);
         this.rocket.setOrigin(this.rocket.getWidth()/2,this.rocket.getHeight()/2);
