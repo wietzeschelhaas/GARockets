@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 
 import javax.xml.soap.Text;
@@ -26,6 +27,7 @@ public class Main extends ApplicationAdapter {
     int popSize = 50;
 
     ArrayList<Dna> population;
+    ArrayList<Dna> matingPool;
 
     ArrayList<Double> fittnesses;
 
@@ -40,6 +42,8 @@ public class Main extends ApplicationAdapter {
 
 
         population = new ArrayList<Dna>();
+        matingPool = new ArrayList<Dna>();
+
         fittnesses = new ArrayList<Double>();
         target = new Sprite(new Texture("target.png"));
         target.setPosition(1500, 800);
@@ -52,26 +56,38 @@ public class Main extends ApplicationAdapter {
     }
 
     private void update(float delta) {
+        fittnesses.clear();
+        matingPool.clear();
         for (Dna rocket : population) {
             rocket.pos.add(rocket.genes[counter]);
             rocket.rocket.setPosition(rocket.pos.x, rocket.pos.y);
             rocket.rocket.setRotation(rocket.genes[counter].angle());
             if (counter == rocket.genes.length-1) {
-                // new generation?
+                // new generation
                 counter = 0;
                 for (Dna r : population){
                     r.calcFitness();
-                    //TODO clear this later
                     fittnesses.add(r.fitness);
                 }
                 //normalize the fittnes data
-                norm(fittnesses);
-                // pick best 2 rocket and make child
-            } else {
-                counter++;
+                ArrayList<Double> normalised = norm(fittnesses);
+
+                for (int i = 0; i < normalised.size(); i++) {
+                    for (int j = 0; j < normalised.get(i) * 100; j++) {
+                        // TODO clear this later
+                        matingPool.add(population.get(i));
+                    }
+                }
+                // pick best 2 rocket and make child, do this 50 times to make new population
+                for (int i = 0; i < popSize; i++) {
+                    Dna child = matingPool.get(MathUtils.random(matingPool.size()-1)).crossOver(matingPool.get(MathUtils.random(matingPool.size()-1)));
+                    child.mutate();
+                    population.set(i,child);
+                }
             }
 
         }
+        counter++;
 
 
     }
@@ -111,7 +127,6 @@ public class Main extends ApplicationAdapter {
 
         for(double fit:f){
             res.add((fit - min) / delta);
-            System.out.println((fit - min) / delta);
         }
         return res;
     }

@@ -27,7 +27,7 @@ public class Dna {
     public Dna() {
 
         pos = new Vector2(100,100);
-        genes = new Vector2[10000];
+        genes = new Vector2[500];
         this.rocket = new Sprite(new Texture("rocket.png"));
         this.rocket.setSize(this.rocket.getWidth()*0.3f,this.rocket.getHeight()*0.3f);
         this.rocket.setOrigin(this.rocket.getWidth()/2,this.rocket.getHeight()/2);
